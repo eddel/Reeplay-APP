@@ -3,10 +3,6 @@ import React, { useEffect, useRef, useState } from "react";
 import { TextInput, View, Text } from "react-native";
 
 const PinInput = () => {
-  let p1 = "0";
-  let p2 = "0";
-  let p3 = "0";
-  let p4 = "0";
   const [pin1, setPin1] = useState("");
   const [pin2, setPin2] = useState("");
   const [pin3, setPin3] = useState("");
@@ -18,20 +14,32 @@ const PinInput = () => {
   const pin4Ref = useRef(null);
 
   const handleChange = (text, ref, setPin) => {
-    setPin(text);
-    if (text.length === 1 && ref.current) {
-      ref.current.focus();
+    if (text === "") {
+      // If the text is empty (backspace), clear all digits.
+      setPin("");
+      if (ref.current) {
+        ref.current.clear();
+        // Move focus to the previous input box.
+        ref.current.focus();
+      }
+    } else {
+      setPin(text);
+      if (text.length === 1 && ref.current) {
+        ref.current.focus();
+      }
     }
   };
+
   const navigation = useNavigation();
+
   useEffect(() => {
-    if (p1 === pin1 && p2 === pin2 && p3 === pin3 && p4 === pin4) {
+    if (pin1 === "1" && pin2 === "2" && pin3 === "3" && pin4 === "4") {
       setError(false);
       setTimeout(() => {
         navigation.navigate("Home");
       }, 1000);
     } else {
-      pin1 != "" && setError(true);
+      pin1 !== "" && setError(true);
       setPin1("");
       setPin2("");
       setPin3("");
@@ -67,7 +75,7 @@ const PinInput = () => {
             keyboardType="numeric"
             maxLength={1}
             onChangeText={(text) => handleChange(text, pin2Ref, setPin1)}
-            value={pin1 ? "•" : null}
+            value={pin1}
             ref={pin1Ref}
           />
         </View>
@@ -77,7 +85,7 @@ const PinInput = () => {
             keyboardType="numeric"
             maxLength={1}
             onChangeText={(text) => handleChange(text, pin3Ref, setPin2)}
-            value={pin2 ? "•" : null}
+            value={pin2}
             ref={pin2Ref}
           />
         </View>
@@ -87,7 +95,7 @@ const PinInput = () => {
             keyboardType="numeric"
             maxLength={1}
             onChangeText={(text) => handleChange(text, pin4Ref, setPin3)}
-            value={pin3 ? "•" : null}
+            value={pin3}
             ref={pin3Ref}
           />
         </View>
@@ -97,9 +105,8 @@ const PinInput = () => {
             keyboardType="numeric"
             maxLength={1}
             onChangeText={(text) => handleChange(text, pin4Ref, setPin4)}
-            value={pin4 != "" ? "•" : null}
+            value={pin4}
             ref={pin4Ref}
-            // secureTextEntry={true}
           />
         </View>
       </View>
@@ -126,14 +133,6 @@ const styles = {
     backgroundColor: "#FCFCFB",
     borderRadius: 5,
     alignSelf: "center",
-  },
-  pinDot: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    fontSize: 20,
-    marginTop: -10,
-    marginLeft: -5,
   },
 };
 
