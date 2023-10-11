@@ -1,2 +1,2 @@
-# Reeplay-APP
-React expo android &amp; IOS one code base mobile App for Reeplay 
+# Reeplay-Mobile-App
+Reeplay Cross plartfom mobile App , ios/android
