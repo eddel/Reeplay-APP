@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, TouchableOpacity } from "react-native";
+import { StyleSheet, View, Text } from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
-import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native";
 
@@ -10,6 +9,7 @@ export default function FaceTouchId() {
   const [biometricType, setBiometricType] = useState(null);
   const [loading, setloading] = useState(true);
   const navigation = useNavigation();
+
   useEffect(() => {
     checkDeviceForBiometrics();
   }, []);
@@ -33,10 +33,15 @@ export default function FaceTouchId() {
     ) {
       setBiometricType("fingerprint");
     }
-     setloading(false)
+    setloading(false);
+    
+    // Automatically trigger biometric authentication once we have the information
+    if (isEnrolled) {
+      authenticateAutomatically();
+    }
   };
 
-  const authenticate = async () => {
+  const authenticateAutomatically = async () => {
     const { success } = await LocalAuthentication.authenticateAsync();
 
     if (success) {
@@ -46,35 +51,14 @@ export default function FaceTouchId() {
     }
   };
 
-  const renderBiometricButton = (biometricType, iconName, buttonLabel) => {
-    return (
-      <TouchableOpacity
-        style={styles.biometricButton}
-        onPress={() => authenticate(biometricType)}
-      >
-        <Ionicons name={iconName} size={48} color="white" />
-        <Text style={styles.biometricLabel}>{buttonLabel}</Text>
-      </TouchableOpacity>
-    );
-  };
-
   return !loading ? (
     <View style={styles.container}>
       {isEnrolled && biometricType && (
-        <View>
-          {biometricType === "face" &&
-            renderBiometricButton(
-              LocalAuthentication.AuthenticationType.FACE_ID,
-              "ios-face-id",
-              "Login with Face ID"
-            )}
-          {biometricType === "fingerprint" &&
-            renderBiometricButton(
-              LocalAuthentication.AuthenticationType.FINGERPRINT,
-              "ios-finger-print",
-              "Login with Touch ID"
-            )}
-        </View>
+        <Text style={styles.infoText}>
+          {biometricType === "face"
+            ? "Logging in with Face ID..."
+            : "Logging in with Touch ID..."}
+        </Text>
       )}
       {!isEnrolled && (
         <Text style={styles.infoText}>
@@ -94,31 +78,12 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
-    backgroundColor:'#fff'
-  },
-  text: {
-    fontSize: 20,
-    marginBottom: 20,
+    backgroundColor: "#fff",
   },
   infoText: {
     fontSize: 16,
     marginTop: 10,
     fontFamily: "roboto",
-    color: "#fff",
-  },
-  biometricButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: "red",
-    padding: 10,
-    borderRadius: 8,
-    marginBottom: 10,
-  },
-  biometricLabel: {
-    color: "white",
-    fontSize: 18,
-    marginLeft: 10,
-    fontFamily: "roboto",
+    color: "#000", // Change color to be visible
   },
 });
