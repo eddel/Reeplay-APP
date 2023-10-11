@@ -26,9 +26,9 @@
         "android.permission.USE_FINGERPRINT"
       ],
       "androidStatusBar": {
-        "barStyle": "light-content", // Choose your desired status bar style
-        "backgroundColor": "#000000", // Choose a background color for the status bar
-        "hidden": false // Show the status bar
+        "barStyle": "light-content", 
+        "backgroundColor": "#000000", 
+        "hidden": false 
       }
     },
     "web": {
