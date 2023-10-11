@@ -24,7 +24,12 @@
       "permissions": [
         "android.permission.USE_BIOMETRIC",
         "android.permission.USE_FINGERPRINT"
-      ]
+      ],
+      "androidStatusBar": {
+        "barStyle": "light-content", // Choose your desired status bar style
+        "backgroundColor": "#000000", // Choose a background color for the status bar
+        "hidden": false // Show the status bar
+      }
     },
     "web": {
       "favicon": "./assets/favicon.png"
