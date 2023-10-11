@@ -2,38 +2,43 @@ import React, { useRef, useState } from 'react';
 import { View, TouchableOpacity, Text, StyleSheet, Dimensions, StatusBar } from 'react-native';
 import { Video, AVPlaybackStatus } from 'expo-av';
 import { Ionicons } from '@expo/vector-icons';
-import { set } from 'react-native-reanimated';
+import { ScreenOrientation } from 'expo';
 
 const VideoPlayer = () => {
     const videoRef = useRef(null);
     const [status, setStatus] = useState(null);
     const [isFullscreen, setIsFullscreen] = useState(false);
-    const [orientationIsLandscape, setOrientation] = useState()
 
     const toggleFullscreen = () => {
         setIsFullscreen((prevState) => !prevState);
-        changeScreenOrientation();
-        setOrientation(!orientationIsLandscape)
+        if (!isFullscreen) {
+            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+        } else {
+            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT);
+        }
     };
 
-    async function changeScreenOrientation() {
-
-        if (orientationIsLandscape == true) {
-            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE_LEFT);
+    const handlePlayPause = async () => {
+        if (status.isPlaying) {
+            await videoRef.current.pauseAsync();
+        } else {
+            await videoRef.current.playAsync();
         }
-        else if (orientationIsLandscape == false) {
-            ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.PORTRAIT)
-        }
-    }
+    };
 
-    // useKeepAwake(); // Optional, for keeping the screen awake during video playback
+    const handleRewind = async () => {
+        await videoRef.current.setPositionAsync(Math.max(status.positionMillis - 10000, 0));
+    };
+
+    const handleFastForward = async () => {
+        await videoRef.current.setPositionAsync(status.positionMillis + 10000);
+    };
 
     return (
         <View style={styles.container}>
             <Video
                 ref={videoRef}
                 source={require('../../../assets/AuthVideo.mp4')}
-                // Additional props for customization
                 resizeMode={isFullscreen ? 'cover' : 'contain'}
                 shouldPlay
                 isLooping
@@ -52,20 +57,23 @@ const VideoPlayer = () => {
                     <TouchableOpacity style={styles.fullscreenButton} onPress={toggleFullscreen}>
                         <Ionicons name="md-expand" size={24} color="white" />
                     </TouchableOpacity>
-
-                    {/* Customized buttons */}
-                    <TouchableOpacity style={styles.customButton}>
-                        <Text style={styles.customButtonText}>Custom Button 1</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity style={styles.customButton}>
-                        <Text style={styles.customButtonText}>Custom Button 2</Text>
-                    </TouchableOpacity>
                 </View>
             )}
+
+            <View style={styles.playbackControls}>
+                <TouchableOpacity onPress={handleRewind}>
+                    <Ionicons name="md-rewind" size={24} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handlePlayPause}>
+                    <Ionicons name={status.isPlaying ? 'md-pause' : 'md-play'} size={24} color="white" />
+                </TouchableOpacity>
+                <TouchableOpacity onPress={handleFastForward}>
+                    <Ionicons name="md-fastforward" size={24} color="white" />
+                </TouchableOpacity>
+            </View>
         </View>
     );
 };
-
 
 const styles = StyleSheet.create({
     container: {
@@ -84,27 +92,13 @@ const styles = StyleSheet.create({
     },
     controls: {
         position: 'absolute',
-        bottom: 20,
-        left: 0,
-        right: 0,
+        top: StatusBar.currentHeight + 10,
+        right: 10,
+    },
+    playbackControls: {
         flexDirection: 'row',
         justifyContent: 'center',
         alignItems: 'center',
-    },
-    customButton: {
-        marginHorizontal: 10,
-        paddingHorizontal: 10,
-        paddingVertical: 5,
-        backgroundColor: 'gray',
-        borderRadius: 5,
-    },
-    customButtonText: {
-        color: 'white',
-    },
-    fullscreenButton: {
-        position: 'absolute',
-        top: StatusBar.currentHeight + 10,
-        right: 10,
     },
     closeButton: {
         position: 'absolute',
@@ -112,4 +106,5 @@ const styles = StyleSheet.create({
         right: 10,
     },
 });
+
 export default VideoPlayer;
