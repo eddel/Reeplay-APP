@@ -1,8 +1,9 @@
 import { useNavigation } from "@react-navigation/native";
 import React, { useEffect, useRef, useState } from "react";
 import { TextInput, View, Text } from "react-native";
+import PropTypes from 'prop-types';
 
-const PinInput = () => {
+const PinInput = ({ correctPin, onPinSuccess, incorrectPinMessage }) => {
   const [pin1, setPin1] = useState("");
   const [pin2, setPin2] = useState("");
   const [pin3, setPin3] = useState("");
@@ -33,10 +34,10 @@ const PinInput = () => {
   const navigation = useNavigation();
 
   useEffect(() => {
-    if (pin1 === "1" && pin2 === "2" && pin3 === "3" && pin4 === "4") {
+    if (pin1 + pin2 + pin3 + pin4 === correctPin) {
       setError(false);
       setTimeout(() => {
-        navigation.navigate("Home");
+        onPinSuccess();
       }, 1000);
     } else {
       pin1 !== "" && setError(true);
@@ -46,7 +47,7 @@ const PinInput = () => {
       setPin4("");
       pin1Ref.current.focus();
     }
-  }, [pin4]);
+  }, [pin4, correctPin, onPinSuccess]);
 
   return (
     <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
@@ -59,12 +60,7 @@ const PinInput = () => {
               color: "red",
             }}
           >
-            Incorrect PIN.
-          </Text>
-          <Text
-            style={{ alignSelf: "center", fontFamily: "roboto", color: "red" }}
-          >
-            Please try again.
+            {incorrectPinMessage}
           </Text>
         </View>
       ) : null}
@@ -112,6 +108,16 @@ const PinInput = () => {
       </View>
     </View>
   );
+};
+
+PinInput.propTypes = {
+  correctPin: PropTypes.string.isRequired,
+  onPinSuccess: PropTypes.func.isRequired,
+  incorrectPinMessage: PropTypes.string,
+};
+
+PinInput.defaultProps = {
+  incorrectPinMessage: "Incorrect PIN. Please try again.",
 };
 
 const styles = {
