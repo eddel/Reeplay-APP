@@ -3,9 +3,9 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 
 export default function PinInput() {
   const [pin, setPin] = React.useState(["", "", "", ""]);
+  const [error, setError] = React.useState(null);
 
   const handlePress = (value) => {
-    // Find the first empty slot in the PIN array
     const emptyIndex = pin.findIndex((entry) => entry === "");
 
     if (emptyIndex !== -1) {
@@ -22,6 +22,20 @@ export default function PinInput() {
       const updatedPin = [...pin];
       updatedPin[lastFilledIndex] = "";
       setPin(updatedPin);
+      setError(null); // Clear any previous errors when the user removes a digit.
+    }
+  };
+
+  const handleConfirm = () => {
+    if (pin.join("") === "1234") {
+      // Replace "1234" with your actual PIN for validation.
+      // The PIN is correct, you can proceed.
+      setError(null);
+      // Add your logic here to proceed when the PIN is correct.
+    } else {
+      setError("Invalid PIN. Please try again.");
+      // Handle the case when the PIN is incorrect.
+      setPin(["", "", "", ""]); // Clear the PIN for a new attempt.
     }
   };
 
@@ -38,6 +52,7 @@ export default function PinInput() {
           <Text style={styles.pinText}>{entry}</Text>
         </View>
       )}
+      {error && <Text style={styles.errorText}>{error}</Text>}
 
       <View style={styles.numberPad}>
         <View style={styles.row}>
@@ -89,68 +104,31 @@ export default function PinInput() {
           </TouchableOpacity>
         </View>
       </View>
+
+      <TouchableOpacity style={styles.confirmButton} onPress={handleConfirm}>
+        <Text style={styles.confirmButtonText}>Confirm</Text>
+      </TouchableOpacity>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
-  pinContainer: {
-    flexDirection: "row",
+  // ... (your existing styles)
+  errorText: {
+    color: "red",
+    textAlign: "center",
+    marginTop: 10,
+  },
+  confirmButton: {
+    width: 200,
+    height: 40,
+    backgroundColor: "blue",
     justifyContent: "center",
     alignItems: "center",
-    marginBottom: 30,
+    marginTop: 20,
   },
-  pinBox: {
-    width: 24,
-    height: 24,
-    borderWidth: 1,
-    borderColor: "black",
-    marginHorizontal: 8,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
-  },
-  pinBoxFilled: {
-    backgroundColor: "black",
-  },
-  pinText: {
+  confirmButtonText: {
     color: "white",
-    fontSize: 16,
-  },
-  numberPad: {
-    marginTop: 30,
-  },
-  row: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    marginBottom: 20,
-  },
-  numberButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    borderWidth: 1,
-    borderColor: "black",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  numberButtonText: {
-    fontSize: 24,
-  },
-  emptyButton: {
-    width: 60,
-    height: 60,
-  },
-  backspaceButton: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    backgroundColor: "black",
-    justifyContent: "center",
-    alignItems: "center",
-  },
-  backspaceButtonText: {
-    fontSize: 16,
-    color: "white",
+    fontSize: 18,
   },
 });
