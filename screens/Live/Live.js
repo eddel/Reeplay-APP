@@ -173,9 +173,9 @@ export default function Live({ navigation, route }) {
   };
   const content = ` This is an Exclusive content,${"\n"}you must purchase to watch.`;
   const colors2 = [
-    ["transparent", "transparent", "#33094F"],
-    ["transparent", "transparent", "#404241"],
-    ["transparent", "transparent", "#4C030A"],
+    ["transparent", "transparent", "#000000", "#000000"],
+    ["transparent", "transparent", "#000000", "#000000"],
+    ["transparent", "transparent", "#000000", "#000000"],
   ];
   const [indx,setIndex]=useState(0)
   return (
@@ -214,7 +214,7 @@ export default function Live({ navigation, route }) {
                 style={{
                   justifyContent: "center",
                   alignItems: "center",
-                  marginTop: "50%",
+                  marginTop: "60%",
                   marginRight: 17,
                 }}
               >
@@ -222,7 +222,7 @@ export default function Live({ navigation, route }) {
                   style={{
                     color: "#fff",
                     fontSize: 14,
-                    // top: Platform.OS === "ios" ? 41 : 21,
+                     top: Platform.OS === "ios" ? 48 : 35,
                     fontFamily: "roboto",
                     alignSelf: "center",
                   }}
@@ -233,7 +233,7 @@ export default function Live({ navigation, route }) {
                   style={{
                     color: "#fff",
                     fontSize: 30,
-                    //top: Platform.OS === "ios" ? 41 : 21,
+                    top: Platform.OS === "ios" ? 50 : 35,
                     fontFamily: "robotobold",
                     alignSelf: "center",
                   }}
@@ -245,7 +245,7 @@ export default function Live({ navigation, route }) {
                   style={{
                     color: "#fff",
                     fontSize: 30,
-                    // top: Platform.OS === "ios" ? 50 : 30,
+                    top: Platform.OS === "ios" ? 50 : 30,
                     fontFamily: "robotobold",
                     alignSelf: "center",
                   }}
@@ -1168,6 +1168,7 @@ const styles = StyleSheet.create({
     backgroundColor: "#FF1313",
     margin: 3,
     borderRadius: 10,
+  
   },
   background: {
     position: "absolute",
