@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text } from "react-native";
+import { StyleSheet, View, Text, Alert } from "react-native";
 import * as LocalAuthentication from "expo-local-authentication";
 import { useNavigation } from "@react-navigation/native";
 import { ActivityIndicator } from "react-native";
@@ -7,7 +7,8 @@ import { ActivityIndicator } from "react-native";
 export default function FaceTouchId() {
   const [isEnrolled, setIsEnrolled] = useState(false);
   const [biometricType, setBiometricType] = useState(null);
-  const [loading, setloading] = useState(true);
+  const [loading, setLoading] = useState(true);
+  const [authenticationAttempts, setAuthenticationAttempts] = useState(0); // Track authentication attempts
   const navigation = useNavigation();
 
   useEffect(() => {
@@ -15,26 +16,22 @@ export default function FaceTouchId() {
   }, []);
 
   const checkDeviceForBiometrics = async () => {
-    setloading(true);
+    setLoading(true);
     const isEnrolled = await LocalAuthentication.hasHardwareAsync();
     const biometricTypes =
       await LocalAuthentication.supportedAuthenticationTypesAsync();
 
     setIsEnrolled(isEnrolled);
 
-    if (
-      biometricTypes.includes(LocalAuthentication.AuthenticationType.FACE_ID)
-    ) {
+    if (biometricTypes.includes(LocalAuthentication.AuthenticationType.FACE_ID)) {
       setBiometricType("face");
     } else if (
-      biometricTypes.includes(
-        LocalAuthentication.AuthenticationType.FINGERPRINT
-      )
+      biometricTypes.includes(LocalAuthentication.AuthenticationType.FINGERPRINT)
     ) {
       setBiometricType("fingerprint");
     }
-    setloading(false);
-    
+    setLoading(false);
+
     // Automatically trigger biometric authentication once we have the information
     if (isEnrolled) {
       authenticateAutomatically();
@@ -47,7 +44,26 @@ export default function FaceTouchId() {
     if (success) {
       navigation.navigate("Home");
     } else {
-      alert("Authentication failed!");
+      // Increment the authentication attempts
+      setAuthenticationAttempts(authenticationAttempts + 1);
+
+      // Limit the number of authentication attempts (e.g., 5)
+      const maxAttempts = 5;
+      if (authenticationAttempts >= maxAttempts) {
+        Alert.alert(
+          "Authentication Limit Exceeded",
+          "Please try again later.",
+          [{ text: "OK" }]
+        );
+      } else {
+        Alert.alert(
+          "Authentication Failed",
+          `Sorry, we don't recognize this print. You have ${
+            maxAttempts - authenticationAttempts
+          } attempts remaining.`,
+          [{ text: "OK" }]
+        );
+      }
     }
   };
 
@@ -68,7 +84,7 @@ export default function FaceTouchId() {
     </View>
   ) : (
     <View style={styles.container}>
-      <ActivityIndicator size="large" color="red" />
+      <ActivityIndicator size="large" color="black" />
     </View>
   );
 }
@@ -84,6 +100,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 10,
     fontFamily: "roboto",
-    color: "#000", // Change color to be visible
+    color: "black",
   },
 });
