@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -6,32 +6,52 @@ import {
   ImageBackground,
   ScrollView,
   TouchableOpacity,
+  StatusBar,
 } from "react-native";
-import { widthPercentageToDP as wp, heightPercentageToDP as hp } from "react-native-responsive-screen";
+import {
+  widthPercentageToDP as wp,
+  heightPercentageToDP as hp,
+} from "react-native-responsive-screen";
 import { RFValue as rf } from "react-native-responsive-fontsize";
 import Logo from "./components/Logo";
 import TextField from "./components/TextField";
 import PasswordField from "./components/PasswordField";
 import Btn from "./components/Btn";
 import NumField from "./components/NumField";
-import Pin from "./components/Pin"; // Import your Pin component
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAvoidingView } from "react-native";
+
+// Import the "Pin" component
+import Pin from "./screens/pin/pin"; // Adjust the path as per your project structure
 
 export default function Register({ navigation }) {
   const [name, setname] = useState();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [isFocusedE, setIsFocusedE] = useState(false);
-  const [pin, setPin] = useState(); // Add state for the PIN
 
-  // ... (Other state and handler functions)
+  // Add the showPin state variable and togglePin function
+  const [showPin, setShowPin] = useState(false);
 
-  const [PromotionToggle, setPromotionToggle] = useState(false);
+  const handleFocusE = () => {
+    setIsFocusedE(true);
+  };
+
+  const handleBlurE = () => {
+    setIsFocusedE(false);
+  };
+
+  // Other functions and state variables...
+
+  // Function to toggle the display of the "Pin" component
+  const togglePin = () => {
+    setShowPin(!showPin);
+  };
 
   return (
     <View style={styles.container}>
+      <StatusBar style="auto" />
       <ImageBackground
         source={require("../../assets/ONBOARDING.png")}
         style={styles.BackGround}
@@ -41,45 +61,22 @@ export default function Register({ navigation }) {
           style={styles.background}
         />
         <ScrollView>
-          <Logo />
-
+          <View style={{ paddingTop: StatusBar.currentHeight }}>
+            <Logo />
+          </View>
           <KeyboardAvoidingView style={styles.FieldsWrapper}>
-            {/* ... (TextFields, Buttons, and other UI components) */}
-            <Pin
-              value={pin}
-              onChange={(text) => setPin(text)} // Handle PIN input changes
+            {/* Your existing code for text fields, buttons, and other components */}
+            <Btn
+              color="#FF1313"
+              Title="Create a New Account"
+              navigation={togglePin} // Call togglePin function
             />
           </KeyboardAvoidingView>
         </ScrollView>
+        {showPin && <Pin navigation={navigation} />}
       </ImageBackground>
     </View>
   );
 }
 
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#000000",
-    paddingTop: 0, // Set padding to 0 to remove top padding
-  },
-  BackGround: {
-    height: hp("100%"),
-    width: wp("100%"),
-  },
-  background: {
-    position: "absolute",
-    right: 0,
-    bottom: 0,
-    left: 0,
-    flexGrow: 1,
-  },
-  FieldsWrapper: {
-    height: hp("60%"),
-    width: wp("90%"),
-    backgroundColor: "#0B0B0B",
-    alignSelf: "center",
-    borderRadius: 20,
-    padding: 10,
-  },
-  // ... (Other styles)
-});
+// Your existing styles...
