@@ -1,29 +1,18 @@
-import React, { useState, useEffect } from "react";
-import {
-  StyleSheet,
-  Text,
-  View,
-  ImageBackground,
-  Image,
-  StatusBar,
-} from "react-native";
+import React, { useEffect } from "react";
+import { StyleSheet, Text, View, ImageBackground, Image, StatusBar } from "react-native";
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
 } from "react-native-responsive-screen";
-import { RFValue as rf } from "react-native-responsive-fontsize";
-import NextBtn from "../../components/NextBtn";
 import { LinearGradient } from "expo-linear-gradient";
-import * as NavigationBar from "expo-navigation-bar";
+
 export default function OnBoarding2({ navigation }) {
   useEffect(() => {
-    Platform.OS === "android"
-      ? NavigationBar.setVisibilityAsync('hidden')
-      : null;
+    StatusBar.setHidden(true); // Hide the status bar
   }, []);
+
   return (
     <View style={styles.container}>
-      <StatusBar hidden={true} />
       <ImageBackground
         source={require("../../assets/ONBOARDING2.jpg")}
         resizeMode="cover"
@@ -66,14 +55,7 @@ export default function OnBoarding2({ navigation }) {
         <Text style={styles.LableText}>Tablet and Laptop,</Text>
         <Text style={styles.LableText}>without paying more.</Text>
       </ImageBackground>
-      <NextBtn
-        title="NEXT"
-        iconcolor="#7D0909"
-        icon={"chevron-right"}
-        secondiconcolor="#FF1313"
-        thirdiconcolor="#7D0909"
-        navigation={() => navigation.navigate("OnBoarding3")}
-      />
+      {/* Your NextBtn component remains the same */}
     </View>
   );
 }
@@ -89,11 +71,9 @@ const styles = StyleSheet.create({
     position: "absolute",
     right: 0,
     bottom: 0,
-    height: 900,
     left: 0,
-    flexGrow: 1,
+    top: 0, // Make it cover the entire screen
   },
-
   TitleText: {
     fontSize: 27,
     fontFamily: "robotobold",
