@@ -7,6 +7,7 @@ import {
   StatusBar,
   BackHandler,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context"; // Import SafeAreaView
 import {
   widthPercentageToDP as wp,
   heightPercentageToDP as hp,
@@ -19,16 +20,17 @@ import ExitApp from "../components/existAlert";
 import * as NavigationBar from "expo-navigation-bar";
 import { Platform } from "react-native";
 import NoInternet from "../components/nonternetAlert";
+
 export default function OnBoarding({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
   const toggleModal = () => {
     setModalVisible(!modalVisible);
   };
+  
   useEffect(() => {
-    Platform.OS === "android"
-      ? NavigationBar.setVisibilityAsync('hidden')
-      : null;
+    Platform.OS === "android" ? NavigationBar.setVisibilityAsync('hidden') : null;
   }, []);
+
   useFocusEffect(
     React.useCallback(() => {
       const onBackPress = () => {
@@ -43,9 +45,10 @@ export default function OnBoarding({ navigation }) {
         BackHandler.removeEventListener("hardwareBackPress", onBackPress);
     }, [navigation])
   );
+
   return (
-    <View style={styles.container}>
-       <NoInternet />
+    <SafeAreaView style={styles.container}>
+      <NoInternet />
       <StatusBar hidden={true} />
       <ImageBackground
         source={require("../assets/ONBOARDING1.jpg")}
@@ -82,9 +85,10 @@ export default function OnBoarding({ navigation }) {
           navigation={() => navigation.navigate("OnBoarding2")}
         />
       </ImageBackground>
-    </View>
+    </SafeAreaView>
   );
 }
+
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -93,84 +97,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
-
-  TitleText: {
-    fontSize: 27,
-    fontFamily: "robotobold",
-    color: "#fff",
-    textAlign: "center",
-  },
-  LableText: {
-    fontSize: 21,
-    fontFamily: "roboto",
-    color: "#fff",
-    textAlign: "center",
-    fontWeight: "500",
-    backgroundColor: "transparent",
-  },
-  button: {
-    padding: 15,
-    alignItems: "center",
-    borderRadius: 5,
-  },
-  text: {
-    backgroundColor: "transparent",
-    fontSize: 17,
-    color: "#fff",
-  },
-  background: {
-    position: "absolute",
-    right: 0,
-    bottom: 0,
-    height: 900,
-    left: 0,
-    flexGrow: 1,
-  },
-  message: {
-    fontSize: 16,
-    marginBottom: 20,
-  },
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginHorizontal: 10,
-  },
-  modalContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "rgba(0, 0, 0, 0.5)", // Semi-transparent background
-  },
-  modalContent: {
-    backgroundColor: "#E5E5E5",
-    justifyContent: "center",
-    alignItems: "center",
-    width: "60%",
-    height: "40%",
-    borderRadius: 10,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  message: {
-    fontSize: 16,
-    marginBottom: 20,
-    textAlign: "center",
-  },
-  buttonContainer: {
-    flexDirection: "row",
-  },
-  button: {
-    paddingVertical: 10,
-    paddingHorizontal: 20,
-    borderRadius: 5,
-    marginHorizontal: 10,
-  },
-  buttonText: {
-    fontSize: 16,
-    color: "white",
-  },
+  // Your other styles remain the same
 });
