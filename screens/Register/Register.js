@@ -14,7 +14,7 @@ import TextField from "./components/TextField";
 import PasswordField from "./components/PasswordField";
 import Btn from "./components/Btn";
 import NumField from "./components/NumField";
-import pin from "./components/pin";
+import Pin from "./components/Pin"; // Import your Pin component
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAvoidingView } from "react-native";
@@ -24,6 +24,7 @@ export default function Register({ navigation }) {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   const [isFocusedE, setIsFocusedE] = useState(false);
+  const [pin, setPin] = useState(); // Add state for the PIN
 
   // ... (Other state and handler functions)
 
@@ -44,6 +45,10 @@ export default function Register({ navigation }) {
 
           <KeyboardAvoidingView style={styles.FieldsWrapper}>
             {/* ... (TextFields, Buttons, and other UI components) */}
+            <Pin
+              value={pin}
+              onChange={(text) => setPin(text)} // Handle PIN input changes
+            />
           </KeyboardAvoidingView>
         </ScrollView>
       </ImageBackground>
