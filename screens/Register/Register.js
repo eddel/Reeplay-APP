@@ -23,7 +23,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { KeyboardAvoidingView } from "react-native";
 
 // Import the "Pin" component
-import Pin from "./screens/pin/pin"; // Adjust the path as per your project structure
+import Pin from "./components/pin";
 
 export default function Register({ navigation }) {
   const [name, setname] = useState();
